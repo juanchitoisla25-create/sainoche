@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>San Andres despues de las 9 p.m.</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172126;
+      --muted: #5a6870;
+      --line: #d8e2e1;
+      --paper: #f8fbfa;
+      --panel: #ffffff;
+      --aqua: #008c95;
+      --coral: #e35d4f;
+      --lime: #7aa63d;
+      --sun: #f4b23c;
+      --night: #263843;
+      --shadow: 0 14px 40px rgba(20, 38, 45, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: end;
+      background:
+        linear-gradient(180deg, rgba(8, 21, 28, .18), rgba(8, 21, 28, .74)),
+        url("https://images.unsplash.com/photo-1581434680937-8f87a3768488?auto=format&fit=crop&w=1800&q=80") center / cover;
+      color: #fff;
+      padding: 26px;
+    }
+
+    .hero-inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding-bottom: 6vh;
+    }
+
+    .toolbar {
+      position: fixed;
+      z-index: 20;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1120px, calc(100% - 24px));
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,.28);
+      background: rgba(21, 35, 42, .72);
+      backdrop-filter: blur(14px);
+      border-radius: 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--sun);
+      color: #172126;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .select, .input {
+      min-height: 40px;
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(255,255,255,.12);
+      padding: 0 12px;
+      outline: none;
+    }
+
+    .select option { color: var(--ink); }
+
+    h1 {
+      max-width: 820px;
+      margin: 0 0 16px;
+      font-size: clamp(44px, 9vw, 92px);
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 690px;
+      margin: 0 0 26px;
+      font-size: 20px;
+      line-height: 1.5;
+      color: rgba(255,255,255,.9);
+    }
+
+    .quick-panel {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 920px;
+    }
+
+    .stat {
+      min-height: 92px;
+      padding: 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.22);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: rgba(255,255,255,.82);
+      line-height: 1.35;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 28px));
+      margin: 32px auto 56px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-title h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 13px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: var(--night);
+      color: #fff;
+      border-color: var(--night);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      background: #d7e8e6;
+    }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 8px;
+      background: #edf6f5;
+      color: #24545a;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .price {
+      display: grid;
+      gap: 6px;
+      padding: 12px;
+      background: #fff7e8;
+      border: 1px solid #f0dfbd;
+      border-radius: 8px;
+      margin-top: auto;
+    }
+
+    .price strong {
+      color: #70480c;
+      font-size: 18px;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--aqua);
+      text-decoration: none;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .converter {
+      margin: 30px 0;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0 11px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .result {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 8px;
+      background: #edf6f5;
+      color: #173d43;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .note {
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .footer-note {
+      padding: 18px 0 2px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 860px) {
+      .toolbar {
+        position: static;
+        transform: none;
+        width: calc(100% - 24px);
+        margin: 12px auto -72px;
+      }
+
+      .hero { padding: 86px 18px 22px; }
+      .quick-panel, .grid, .converter, .controls { grid-template-columns: 1fr; }
+      .chips { justify-content: flex-start; }
+      .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 520px) {
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .toolbar-actions { justify-content: stretch; }
+      .select { flex: 1; min-width: 0; }
+      .quick-panel { gap: 10px; }
+      .fields { grid-template-columns: 1fr; }
+      .lead { font-size: 18px; }
+    }
+
+#paseOverlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:20px;z-index:99999}
+.pase-box{position:relative;background:var(--pase-bg);color:var(--pase-fg);border-radius:16px;padding:26px 22px;max-width:380px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.pase-box h2{margin:6px 0 8px;font-size:1.3rem;line-height:1.2}
+.pase-box p{margin:0 0 14px;font-size:.92rem;line-height:1.5;opacity:.85}
+.pase-tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pase-accent)}
+.pase-x{position:absolute;top:10px;right:12px;width:auto;background:none;border:0;color:inherit;font-size:1.1rem;cursor:pointer;padding:6px;opacity:.7}
+.pase-box input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(128,128,128,.45);background:transparent;color:inherit;font-size:1rem;text-transform:uppercase;margin-bottom:12px}
+.pase-go{width:100%;padding:12px;border:0;border-radius:10px;background:var(--pase-accent);color:var(--pase-accent-fg);font-weight:700;font-size:1rem;cursor:pointer}
+.pase-wa{display:block;text-align:center;margin-top:12px;font-size:.88rem;color:var(--pase-accent);text-decoration:none}
+.pase-msg{min-height:20px;margin-top:10px;font-size:.85rem;text-align:center}
+.pase-pill{width:auto!important;display:inline-block;margin-top:10px;padding:6px 14px;border-radius:100px;font-size:.78rem;font-weight:700;cursor:pointer;background:var(--pill-bg);border:1px solid var(--pill-bd);color:var(--pill-fg);font-family:inherit;letter-spacing:.04em}
+
+:root{--pill-bg:rgba(255,255,255,.12);--pill-bd:rgba(255,255,255,.38);--pill-fg:#fff}
+.toolbar .pase-pill{margin:0;border-radius:8px;min-height:40px;padding:0 12px}
+.pase-lock{font-style:normal}
+.pase-locked{position:relative;overflow:hidden}
+.pase-cover{position:absolute;inset:0;z-index:2;background:rgba(255,255,255,.84);backdrop-filter:blur(5px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-weight:700;text-align:center;padding:16px}
+.pase-cover button{padding:10px 18px;border:0;border-radius:8px;background:var(--aqua);color:#fff;font-weight:700;cursor:pointer;font-family:inherit;font-size:.95rem}
+  </style>
+</head>
+<body>
+  <div class="toolbar" aria-label="Controles principales">
+    <div class="brand" id="paseTap"><span class="mark">9+</span><span data-i18n="brand">San Andres Noche</span></div>
+    <div class="toolbar-actions">
+      <button class="pase-pill" id="paseBtn" type="button"></button>
+      <select class="select" id="language" aria-label="Idioma">
+        <option value="es">Espanol</option>
+        <option value="en">English</option>
+        <option value="pt">Portugues</option>
+        <option value="fr">Francais</option>
+      </select>
+      <select class="select" id="currency" aria-label="Moneda">
+        <option value="COP">COP</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="BRL">BRL</option>
+      </select>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <h1 data-i18n="heroTitle">Que hacer en San Andres despues de las 9 p.m.</h1>
+      <p class="lead" data-i18n="heroText">Planes nocturnos con fotos, zonas sugeridas, presupuesto de coctel y conversion de moneda local para decidir rapido desde el celular.</p>
+      <div class="quick-panel">
+        <div class="stat"><b>21:00+</b><span data-i18n="stat1">Todo abre el filtro de noche.</span></div>
+        <div class="stat"><b>COP</b><span data-i18n="stat2">La moneda local es peso colombiano.</span></div>
+        <div class="stat"><b>4</b><span data-i18n="stat3">Idiomas incluidos.</span></div>
+        <div class="stat"><b>25k-55k</b><span data-i18n="stat4">Rango comun para un coctel sencillo o de autor.</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Filtros de plan">
+      <div class="section-title">
+        <h2 data-i18n="plansTitle">Planes para esta noche</h2>
+        <p data-i18n="plansText">Filtra por energia: tranquilo, musica, baile, comida o vista al mar.</p>
+      </div>
+      <div class="chips" id="filters"></div>
+    </section>
+
+    <section class="grid" id="cards" aria-live="polite"></section>
+
+    <section class="converter">
+      <div class="panel">
+        <h2 data-i18n="converterTitle">Conversor rapido</h2>
+        <div class="fields">
+          <label><span data-i18n="amountLabel">Monto</span><input class="field" id="amount" type="number" min="0" value="10"></label>
+          <label><span data-i18n="fromLabel">De</span><select class="field" id="fromCurrency"><option>COP</option><option selected>USD</option><option>EUR</option><option>BRL</option></select></label>
+          <label><span data-i18n="toLabel">A</span><select class="field" id="toCurrency"><option>USD</option><option selected>COP</option><option>EUR</option><option>BRL</option></select></label>
+          <label><span data-i18n="rateLabel">COP por USD</span><input class="field" id="usdRate" type="number" min="1" value="4000"></label>
+        </div>
+        <div class="fields" style="margin-top:10px">
+          <label><span data-i18n="eurRateLabel">COP por EUR</span><input class="field" id="eurRate" type="number" min="1" value="4350"></label>
+          <label><span data-i18n="brlRateLabel">COP por BRL</span><input class="field" id="brlRate" type="number" min="1" value="750"></label>
+        </div>
+        <div class="result" id="conversionResult"></div>
+      </div>
+      <div class="panel">
+        <h2 data-i18n="tipsTitle">Notas utiles</h2>
+        <p class="note" data-i18n="tipsText">Los precios son estimados para orientarte; revisa carta, cover y servicio antes de pedir. Para moverte tarde, prefiere taxi autorizado o transporte acordado con tu hotel.</p>
+      </div>
+    </section>
+
+    <p class="footer-note" data-i18n="sourceNote">Base informativa: San Andres es una isla turistica del Caribe colombiano, con centro urbano en el norte, playas como Spratt Bight y clima calido estable. Las actividades y precios se presentan como guia practica, no como confirmacion de disponibilidad en tiempo real.</p>
+  </main>
+
+  <script>
+    const translations = {
+      es: {
+        brand: "San Andres Noche",
+        heroTitle: "Que hacer en San Andres despues de las 9 p.m.",
+        heroText: "Planes nocturnos con fotos, zonas sugeridas, presupuesto de coctel y conversion de moneda local para decidir rapido desde el celular.",
+        stat1: "Todo abre el filtro de noche.",
+        stat2: "La moneda local es peso colombiano.",
+        stat3: "Idiomas incluidos.",
+        stat4: "Rango comun para un coctel sencillo o de autor.",
+        plansTitle: "Planes para esta noche",
+        plansText: "Filtra por energia: tranquilo, musica, baile, comida o vista al mar.",
+        converterTitle: "Conversor rapido",
+        amountLabel: "Monto",
+        fromLabel: "De",
+        toLabel: "A",
+        rateLabel: "COP por USD",
+        eurRateLabel: "COP por EUR",
+        brlRateLabel: "COP por BRL",
+        tipsTitle: "Notas utiles",
+        tipsText: "Los precios son estimados para orientarte; revisa carta, cover y servicio antes de pedir. Para moverte tarde, prefiere taxi autorizado o transporte acordado con tu hotel.",
+        sourceNote: "Base informativa: San Andres es una isla turistica del Caribe colombiano, con centro urbano en el norte, playas como Spratt Bight y clima calido estable. Las actividades y precios se presentan como guia practica, no como confirmacion de disponibilidad en tiempo real.",
+        map: "Ver zona",
+        cocktail: "Coctel estimado",
+        filters: { all: "Todos", calm: "Tranquilo", music: "Musica", dance: "Baile", food: "Comida", sea: "Mar" },
+        cards: [
+          ["Paseo por Spratt Bight", "Caminar por el malecon, mirar el mar y entrar a bares cercanos si el ambiente esta vivo.", "Centro / playa Spratt Bight", "Tranquilo", "Mar"],
+          ["Bar con reggae o musica caribena", "Busca bares pequenos con musica en vivo o DJ suave; suele ser el plan mas local y flexible.", "Centro y zona hotelera", "Musica", "Cocteles"],
+          ["Baile y discoteca", "Para salsa, crossover o reggaeton, pregunta por la noche activa del dia antes de pagar cover.", "Centro nocturno", "Baile", "Alta energia"],
+          ["Coco loco frente al mar", "Plan clasico: pedir un coco loco o coctel tropical y quedarse cerca de una zona iluminada.", "Bares de playa", "Mar", "Cocteles"],
+          ["Comida tarde", "Despues de beber, busca ceviche, hamburguesa, arepa o comida rapida cerca del centro.", "Centro", "Comida", "Casual"],
+          ["Casino o plan bajo techo", "Buena opcion si llueve o quieres aire acondicionado, luces y una actividad sin playa.", "Hoteles / centro", "Tranquilo", "Interior"]
+        ]
+      },
+      en: {
+        brand: "San Andres Night",
+        heroTitle: "What to do in San Andres after 9 p.m.",
+        heroText: "Night ideas with photos, suggested areas, cocktail budget and local currency conversion for quick mobile decisions.",
+        stat1: "Everything is filtered for night time.",
+        stat2: "The local currency is Colombian peso.",
+        stat3: "Languages included.",
+        stat4: "Common range for a simple or signature cocktail.",
+        plansTitle: "Plans for tonight",
+        plansText: "Filter by mood: calm, music, dancing, food or sea view.",
+        converterTitle: "Quick converter",
+        amountLabel: "Amount",
+        fromLabel: "From",
+        toLabel: "To",
+        rateLabel: "COP per USD",
+        eurRateLabel: "COP per EUR",
+        brlRateLabel: "COP per BRL",
+        tipsTitle: "Useful notes",
+        tipsText: "Prices are estimates for orientation; check menu, cover and service before ordering. Late at night, prefer authorized taxis or transport arranged with your hotel.",
+        sourceNote: "Info base: San Andres is a tourist island in the Colombian Caribbean, with its main urban area in the north, beaches such as Spratt Bight and steady warm weather. Activities and prices are practical guidance, not real-time availability.",
+        map: "View area",
+        cocktail: "Estimated cocktail",
+        filters: { all: "All", calm: "Calm", music: "Music", dance: "Dance", food: "Food", sea: "Sea" },
+        cards: [
+          ["Spratt Bight walk", "Walk the waterfront, watch the sea and step into nearby bars if the mood feels alive.", "Downtown / Spratt Bight beach", "Calm", "Sea"],
+          ["Reggae or Caribbean music bar", "Look for small bars with live music or a soft DJ set; this is usually the most local, flexible plan.", "Downtown and hotel area", "Music", "Cocktails"],
+          ["Dancing and nightclub", "For salsa, crossover or reggaeton, ask which night is active before paying cover.", "Nightlife center", "Dance", "High energy"],
+          ["Coco loco by the sea", "Classic plan: order a coco loco or tropical cocktail and stay near a well-lit area.", "Beach bars", "Sea", "Cocktails"],
+          ["Late food", "After drinks, look for ceviche, burgers, arepas or fast food near downtown.", "Downtown", "Food", "Casual"],
+          ["Casino or indoor plan", "Good if it rains or you want air conditioning, lights and an activity away from the beach.", "Hotels / downtown", "Calm", "Indoor"]
+        ]
+      },
+      pt: {
+        brand: "San Andres Noite",
+        heroTitle: "O que fazer em San Andres depois das 21h",
+        heroText: "Planos noturnos com fotos, zonas sugeridas, orcamento de coquetel e conversao para moeda local.",
+        stat1: "Tudo pensado para a noite.",
+        stat2: "A moeda local e o peso colombiano.",
+        stat3: "Idiomas incluidos.",
+        stat4: "Faixa comum para um coquetel simples ou autoral.",
+        plansTitle: "Planos para hoje a noite",
+        plansText: "Filtre por clima: tranquilo, musica, danca, comida ou vista para o mar.",
+        converterTitle: "Conversor rapido",
+        amountLabel: "Valor",
+        fromLabel: "De",
+        toLabel: "Para",
+        rateLabel: "COP por USD",
+        eurRateLabel: "COP por EUR",
+        brlRateLabel: "COP por BRL",
+        tipsTitle: "Notas uteis",
+        tipsText: "Os precos sao estimativas; confira cardapio, entrada e servico antes de pedir. A noite, prefira taxi autorizado ou transporte combinado com o hotel.",
+        sourceNote: "Base informativa: San Andres e uma ilha turistica do Caribe colombiano, com centro urbano ao norte, praias como Spratt Bight e clima quente estavel. Atividades e precos sao guia pratica, nao disponibilidade em tempo real.",
+        map: "Ver zona",
+        cocktail: "Coquetel estimado",
+        filters: { all: "Todos", calm: "Tranquilo", music: "Musica", dance: "Danca", food: "Comida", sea: "Mar" },
+        cards: [
+          ["Passeio por Spratt Bight", "Caminhe pelo calcadao, veja o mar e entre em bares proximos se o ambiente estiver bom.", "Centro / praia Spratt Bight", "Tranquilo", "Mar"],
+          ["Bar com reggae ou musica caribenha", "Procure bares pequenos com musica ao vivo ou DJ leve; costuma ser o plano mais local e flexivel.", "Centro e zona hoteleira", "Musica", "Coqueteis"],
+          ["Danca e balada", "Para salsa, crossover ou reggaeton, pergunte qual noite esta ativa antes de pagar entrada.", "Centro noturno", "Danca", "Alta energia"],
+          ["Coco loco frente ao mar", "Plano classico: pedir um coco loco ou coquetel tropical e ficar em uma area iluminada.", "Bares de praia", "Mar", "Coqueteis"],
+          ["Comida tarde", "Depois de beber, procure ceviche, hamburguer, arepa ou comida rapida perto do centro.", "Centro", "Comida", "Casual"],
+          ["Cassino ou plano coberto", "Boa opcao se chover ou se voce quiser ar-condicionado, luzes e uma atividade sem praia.", "Hoteis / centro", "Tranquilo", "Interior"]
+        ]
+      },
+      fr: {
+        brand: "San Andres Nuit",
+        heroTitle: "Que faire a San Andres apres 21 h",
+        heroText: "Idees de sortie avec photos, zones conseillees, budget cocktail et conversion en monnaie locale.",
+        stat1: "Tout est pense pour la nuit.",
+        stat2: "La monnaie locale est le peso colombien.",
+        stat3: "Langues incluses.",
+        stat4: "Fourchette courante pour un cocktail simple ou signature.",
+        plansTitle: "Plans pour ce soir",
+        plansText: "Filtre par ambiance: calme, musique, danse, repas ou vue mer.",
+        converterTitle: "Convertisseur rapide",
+        amountLabel: "Montant",
+        fromLabel: "De",
+        toLabel: "Vers",
+        rateLabel: "COP par USD",
+        eurRateLabel: "COP par EUR",
+        brlRateLabel: "COP par BRL",
+        tipsTitle: "Notes utiles",
+        tipsText: "Les prix sont des estimations; verifie la carte, le cover et le service avant de commander. Le soir, privilegie les taxis autorises ou le transport organise par ton hotel.",
+        sourceNote: "Base d'information: San Andres est une ile touristique des Caraibes colombiennes, avec un centre urbain au nord, des plages comme Spratt Bight et un climat chaud stable. Activites et prix sont un guide pratique, pas une disponibilite en temps reel.",
+        map: "Voir zone",
+        cocktail: "Cocktail estime",
+        filters: { all: "Tous", calm: "Calme", music: "Musique", dance: "Danse", food: "Repas", sea: "Mer" },
+        cards: [
+          ["Balade a Spratt Bight", "Marche sur la promenade, regarde la mer et entre dans les bars proches si l'ambiance est bonne.", "Centre / plage Spratt Bight", "Calme", "Mer"],
+          ["Bar reggae ou musique caribeenne", "Cherche de petits bars avec musique live ou DJ doux; c'est souvent le plan le plus local et flexible.", "Centre et zone hoteliere", "Musique", "Cocktails"],
+          ["Danse et discotheque", "Pour salsa, crossover ou reggaeton, demande quelle soiree bouge avant de payer l'entree.", "Centre nocturne", "Danse", "Haute energie"],
+          ["Coco loco face a la mer", "Plan classique: commander un coco loco ou cocktail tropical et rester dans une zone eclairee.", "Bars de plage", "Mer", "Cocktails"],
+          ["Repas tardif", "Apres les verres, cherche ceviche, burger, arepa ou repas rapide pres du centre.", "Centre", "Repas", "Simple"],
+          ["Casino ou plan interieur", "Bonne option s'il pleut ou si tu veux climatisation, lumieres et activite sans plage.", "Hotels / centre", "Calme", "Interieur"]
+        ]
+      }
+    };
+
+    const planData = [
+      { type: ["calm", "sea"], img: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80", cop: [25000, 40000], query: "Spratt Bight San Andres Colombia" },
+      { type: ["music"], img: "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=900&q=80", cop: [30000, 50000], query: "bars San Andres Colombia centro" },
+      { type: ["dance"], img: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80", cop: [35000, 65000], query: "nightclub San Andres Colombia" },
+      { type: ["sea"], img: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=900&q=80", cop: [28000, 55000], query: "beach bar San Andres Colombia" },
+      { type: ["food"], img: "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=900&q=80", cop: [18000, 35000], query: "late food San Andres Colombia centro" },
+      { type: ["calm"], img: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=900&q=80", cop: [25000, 45000], query: "casino San Andres Colombia" }
+    ];
+
+    const money = new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 });
+    const state = { lang: "es", filter: "all", displayCurrency: "COP" };
+
+    const language = document.querySelector("#language");
+    const currency = document.querySelector("#currency");
+    const cards = document.querySelector("#cards");
+    const filters = document.querySelector("#filters");
+    const amount = document.querySelector("#amount");
+    const fromCurrency = document.querySelector("#fromCurrency");
+    const toCurrency = document.querySelector("#toCurrency");
+    const usdRate = document.querySelector("#usdRate");
+    const eurRate = document.querySelector("#eurRate");
+    const brlRate = document.querySelector("#brlRate");
+    const conversionResult = document.querySelector("#conversionResult");
+
+    function rates() {
+      return { COP: 1, USD: Number(usdRate.value) || 4000, EUR: Number(eurRate.value) || 4350, BRL: Number(brlRate.value) || 750 };
+    }
+
+    function fromCop(value, code) {
+      return code === "COP" ? value : value / rates()[code];
+    }
+
+    function formatCurrency(value, code) {
+      if (code === "COP") return "$" + money.format(value) + " COP";
+      return new Intl.NumberFormat(state.lang, { style: "currency", currency: code, maximumFractionDigits: 2 }).format(value);
+    }
+
+    function t(key) {
+      return translations[state.lang][key];
+    }
+
+    function renderText() {
+      document.documentElement.lang = state.lang;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        el.textContent = t(el.dataset.i18n);
+      });
+    }
+
+    function renderFilters() {
+      const filterMap = t("filters");
+      filters.innerHTML = Object.keys(filterMap).map((key) => (
+        `<button class="chip ${state.filter === key ? "active" : ""}" data-filter="${key}" type="button">${filterMap[key]}</button>`
+      )).join("");
+    }
+
+    function renderCards() {
+      const cardText = t("cards");
+      cards.innerHTML = planData.map((plan, index) => ({ plan, text: cardText[index] }))
+        .filter(({ plan }) => state.filter === "all" || plan.type.includes(state.filter))
+        .map(({ plan, text }) => {
+          const low = formatCurrency(fromCop(plan.cop[0], state.displayCurrency), state.displayCurrency);
+          const high = formatCurrency(fromCop(plan.cop[1], state.displayCurrency), state.displayCurrency);
+          const mapUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(plan.query);
+          return `
+            <article class="card">
+              <img src="${plan.img}" alt="${text[0]}" loading="lazy">
+              <div class="card-body">
+                <div class="meta"><span class="pill">${text[2]}</span><span class="pill">${text[3]}</span><span class="pill">${text[4]}</span></div>
+                <h3>${text[0]}</h3>
+                <p>${text[1]}</p>
+                <div class="price"><span>${t("cocktail")}</span><strong>${low} - ${high}</strong></div>
+                <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener">${t("map")}<span class="pase-lock">${paseActive()?"":" 🔒"}</span></a>
+              </div>
+            </article>
+          `;
+        }).join("");
+    }
+
+    function convert() {
+      const value = Number(amount.value) || 0;
+      const r = rates();
+      const inCop = value * r[fromCurrency.value];
+      const result = inCop / r[toCurrency.value];
+      conversionResult.textContent = `${formatCurrency(value, fromCurrency.value)} = ${formatCurrency(result, toCurrency.value)}`;
+    }
+
+    function render() {
+      renderText();
+      renderFilters();
+      renderCards();
+      convert();
+    }
+
+    language.addEventListener("change", () => { state.lang = language.value; render(); });
+    currency.addEventListener("change", () => { state.displayCurrency = currency.value; renderCards(); });
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-filter]");
+      if (!button) return;
+      state.filter = button.dataset.filter;
+      renderFilters();
+      renderCards();
+    });
+    [amount, fromCurrency, toCurrency, usdRate, eurRate, brlRate].forEach((el) => el.addEventListener("input", convert));
+    [fromCurrency, toCurrency].forEach((el) => el.addEventListener("change", convert));
+
+
+/* ================= PASE PREMIUM =================
+   Código sin servidor: el código válido cambia cada mes y se calcula con una
+   palabra secreta. Es un candado sencillo para un negocio pequeño, no un
+   sistema anti-fraude: alguien con conocimientos técnicos que lea el código
+   fuente podría calcularlo. Para tu código del mes: toca 6 veces seguidas el
+   título de la app y saldrá en una ventana. */
+const PASE = {"id": "noche", "nombre": "Pase Noche", "prefijo": "NOCH", "secreto": "SANANDRESNOCHE-2026-SANANDRES", "whatsapp": "573016079064", "beneficios": "Abre la ubicación de cada plan en el mapa y el conversor de moneda.", "tema": {"--pase-bg": "#ffffff", "--pase-fg": "#172126", "--pase-accent": "#008c95", "--pase-accent-fg": "#ffffff"}, "es": {"motivoMapa": "Ver la ubicación de cada plan en el mapa requiere el Pase Noche.", "motivoConv": "El conversor de moneda requiere el Pase Noche.", "coverTitle": "Conversor de moneda", "coverBtn": "Desbloquear"}, "i18n": {"en": {"nombre": "Night Pass", "unlock": "Unlock this feature", "active": "Your pass is active", "go": "Activate", "eg": "E.g.:", "ask": "Don't have a code? Ask here", "bad": "Invalid code. Please check it with whoever gave it to you.", "beneficios": "Opens each plan's location on the map and the currency converter.", "motivoMapa": "Seeing each plan's location on the map requires the Night Pass.", "motivoConv": "The currency converter requires the Night Pass.", "coverTitle": "Currency converter", "coverBtn": "Unlock"}, "pt": {"nombre": "Passe Noite", "unlock": "Desbloqueie este recurso", "active": "Seu passe está ativo", "go": "Ativar", "eg": "Ex.:", "ask": "Não tem um código? Peça aqui", "bad": "Código inválido. Confira com quem o enviou.", "beneficios": "Abre a localização de cada programa no mapa e o conversor de moeda.", "motivoMapa": "Ver a localização de cada programa no mapa requer o Passe Noite.", "motivoConv": "O conversor de moeda requer o Passe Noite.", "coverTitle": "Conversor de moeda", "coverBtn": "Desbloquear"}, "fr": {"nombre": "Pass Nuit", "unlock": "Débloquez cette fonction", "active": "Votre pass est actif", "go": "Activer", "eg": "Ex. :", "ask": "Pas de code ? Demandez-le ici", "bad": "Code invalide. Vérifiez-le auprès de la personne qui vous l’a donné.", "beneficios": "Ouvre l’emplacement de chaque plan sur la carte et le convertisseur de devises.", "motivoMapa": "Voir l’emplacement de chaque plan sur la carte nécessite le Pass Nuit.", "motivoConv": "Le convertisseur de devises nécessite le Pass Nuit.", "coverTitle": "Convertisseur de devises", "coverBtn": "Débloquer"}}};
+let paseMem = false;
+/* Textos del pase: por defecto en español; una app multilenguaje puede traer PASE.i18n con otros idiomas */
+const PASE_ES={nombre:PASE.nombre,unlock:'Desbloquea esta función',active:'Tu pase está activo',go:'Activar',eg:'Ej:',ask:'¿No tienes código? Pídelo aquí',bad:'Código inválido, verifícalo con quien te lo dio.',beneficios:PASE.beneficios};
+function paseT(k){
+  const l=(typeof state!=='undefined'&&state&&state.lang)||'es';
+  const m=(PASE.i18n&&PASE.i18n[l])||{};
+  return m[k]||(PASE.es&&PASE.es[k])||PASE_ES[k];
+}
+function paseHash(s){let h=5381;for(let i=0;i<s.length;i++){h=((h<<5)+h+s.charCodeAt(i))>>>0;}return h;}
+function paseMonthKey(o){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+o);return d.getFullYear()+'-'+(d.getMonth()+1);}
+function paseCode(o){return PASE.prefijo+((paseHash(paseMonthKey(o)+PASE.secreto)%900000)+100000);}
+function paseValid(c){c=(c||'').trim().toUpperCase().replace(/\s+/g,'');return c===paseCode(0)||c===paseCode(-1);}
+function paseActive(){try{return paseMem||localStorage.getItem('pase_'+PASE.id)==='1';}catch(e){return paseMem;}}
+function paseActivate(c){
+  if(!paseValid(c))return false;
+  paseMem=true;
+  try{localStorage.setItem('pase_'+PASE.id,'1');}catch(e){}
+  return true;
+}
+function paseClose(){const o=document.getElementById('paseOverlay');if(o)o.remove();}
+function paseOpen(motivo,onOk){
+  paseClose();
+  const o=document.createElement('div');
+  o.id='paseOverlay';
+  for(const k in PASE.tema){o.style.setProperty(k,PASE.tema[k]);}
+  const activo=paseActive();
+  o.innerHTML='<div class="pase-box"><button class="pase-x" aria-label="Cerrar">✕</button>'
+    +'<span class="pase-tag">'+(activo?'✨ ':'🔓 ')+paseT('nombre')+'</span>'
+    +(activo
+      ?'<h2>'+paseT('active')+'</h2><p>'+paseT('beneficios')+'</p>'
+      :'<h2>'+paseT('unlock')+'</h2><p>'+(motivo||paseT('beneficios'))+'</p>'
+        +'<input id="paseInput" placeholder="'+paseT('eg')+' '+PASE.prefijo+'123456" autocomplete="off" autocapitalize="characters">'
+        +'<button class="pase-go">'+paseT('go')+'</button>'
+        +'<a class="pase-wa" target="_blank" rel="noopener" href="https://wa.me/'+PASE.whatsapp+'?text='+encodeURIComponent('Hola! Quiero mi código del '+PASE.nombre)+'">💬 '+paseT('ask')+'</a>'
+        +'<div class="pase-msg" id="paseMsg"></div>')
+    +'</div>';
+  document.body.appendChild(o);
+  o.addEventListener('click',e=>{if(e.target===o)paseClose();});
+  o.querySelector('.pase-x').onclick=paseClose;
+  const go=o.querySelector('.pase-go');
+  if(go){
+    const intentar=()=>{
+      if(paseActivate(document.getElementById('paseInput').value)){
+        paseClose();paseRefresh();
+        if(onOk)onOk();
+      }else{
+        const m=document.getElementById('paseMsg');
+        m.textContent=paseT('bad');
+        m.style.color='#e5604d';
+      }
+    };
+    go.onclick=intentar;
+    document.getElementById('paseInput').addEventListener('keydown',e=>{if(e.key==='Enter')intentar();});
+  }
+}
+function paseGuard(motivo,fn){
+  if(paseActive()){fn();}else{paseOpen(motivo,fn);}
+}
+function paseRefresh(){
+  const b=document.getElementById('paseBtn');
+  if(b){b.textContent=(paseActive()?'✨ ':'🔓 ')+paseT('nombre');}
+  if(typeof paseRefreshLocks==='function')paseRefreshLocks();
+}
+let paseTaps=0,paseTapTimer;
+function paseSecretTap(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener('click',()=>{
+    paseTaps++;
+    clearTimeout(paseTapTimer);
+    paseTapTimer=setTimeout(()=>{paseTaps=0;},3000);
+    if(paseTaps>=6){
+      paseTaps=0;
+      alert('🔑 Código '+PASE.nombre+' de este mes:\n\n'+paseCode(0)+'\n\nEntrégalo solo a quien ya haya pagado.');
+    }
+  });
+}
+
+/* "Ver zona" (ubicación en el mapa) requiere el pase: se intercepta el clic */
+document.addEventListener('click',function(e){
+  const a=e.target.closest('a.map-link');
+  if(!a||paseActive())return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  paseOpen(paseT('motivoMapa'),()=>{window.open(a.href,'_blank','noopener');});
+},true);
+/* El conversor se tapa con un velo y sus campos se desactivan hasta tener pase */
+function paseCover(){
+  const panel=document.getElementById('amount').closest('.panel');
+  let c=panel.querySelector('.pase-cover');
+  const activo=paseActive();
+  panel.querySelectorAll('input,select').forEach(el=>{el.disabled=!activo;});
+  if(activo){if(c)c.remove();panel.classList.remove('pase-locked');return;}
+  panel.classList.add('pase-locked');
+  if(!c){c=document.createElement('div');c.className='pase-cover';panel.appendChild(c);}
+  c.innerHTML='<div>🔒 '+paseT('coverTitle')+'</div><button type="button">'+paseT('coverBtn')+'</button>';
+  c.querySelector('button').onclick=()=>paseOpen(paseT('motivoConv'));
+}
+function paseRefreshLocks(){
+  document.querySelectorAll('.pase-lock').forEach(e=>{e.textContent=paseActive()?'':' 🔒';});
+  paseCover();
+}
+language.addEventListener('change',()=>paseRefresh());
+document.getElementById('paseBtn').onclick=()=>paseOpen();
+paseSecretTap('paseTap');
+paseRefresh();
+
+    render();
+  </script>
+</body>
+</html>
